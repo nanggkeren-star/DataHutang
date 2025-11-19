@@ -87,7 +87,7 @@ thead th{
 }
 tbody td{padding:12px 14px;border-bottom:1px solid var(--row-border);background:var(--row-bg);color:var(--text)}
 tbody tr:hover td{background:var(--row-hover)}
-.pill{display:inline-block;padding:7px 10px;border-radius:999px;font-weight:700;font-size:12px}
+.pill{display:inline-block;padding:7px 12px;border-radius:999px;font-weight:700;font-size:12px; white-space:nowrap;}
 .pill.lunas{background:color-mix(in srgb, #16a34a 12%, transparent);color:var(--ok);border:1px solid rgba(22,163,74,0.12)}
 .pill.belum{background:color-mix(in srgb, #f59e0b 12%, transparent);color:var(--warn);border:1px solid rgba(245,158,11,0.12)}
 
@@ -273,8 +273,41 @@ const totalPiutangEl = document.getElementById("totalPiutang");
 const countBelumEl = document.getElementById("countBelum");
 const countLunasEl = document.getElementById("countLunas");
 
+/* parse CSV naive (ok for your sheet). returns array of rows (arrays) */
 function parseCSV(text){
   return text.trim().split("\n").map(r => r.split(","));
+}
+
+/* normalize numeric strings: remove thousand separators (.) and spaces, convert comma->dot if needed */
+function toNumberFromSheet(val){
+  if (val === null || val === undefined) return 0;
+  let s = String(val).trim();
+  if (s === "") return 0;
+  // remove non-digit except minus and comma/dot
+  // first remove spaces
+  s = s.replace(/\s/g, "");
+  // if format like "700.000" (thousand separator) -> remove dots
+  // if format like "1,234" (decimal comma) -> convert comma to dot
+  // strategy: if contains '.' and length of last segment 3 -> assume thousand separators -> remove dots
+  if (s.indexOf(".") !== -1) {
+    const parts = s.split(".");
+    const last = parts[parts.length - 1];
+    if (last.length === 3) {
+      s = parts.join(""); // remove dots
+    } else {
+      // maybe decimal dot, leave it
+      s = s;
+    }
+  }
+  // convert comma decimal to dot
+  if (s.indexOf(",") !== -1 && s.indexOf(".") === -1) {
+    s = s.replace(",", ".");
+  } else {
+    // remove remaining commas used as thousand sep
+    s = s.replace(/,/g, "");
+  }
+  const n = Number(s);
+  return isNaN(n) ? 0 : n;
 }
 
 function fmtNum(n){
@@ -289,59 +322,90 @@ function fmtDate(d){
   return t.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
 }
 
+function renderEmpty(msg){
+  tbody.innerHTML = `<tr><td class="empty" colspan="7">${msg}</td></tr>`;
+}
+
 function loadAndRender(){
-  tbody.innerHTML = `<tr><td class="empty" colspan="7">Memuat data...</td></tr>`;
+  renderEmpty('Memuat data dari Google Sheet...');
 
   fetch(CSV_URL)
     .then(r=>r.text())
     .then(csv=>{
       const rows = parseCSV(csv);
-      rows.shift(); // hapus header
+      // assume header first row
+      rows.shift();
 
       if(!rows.length){
-        tbody.innerHTML = `<tr><td class="empty" colspan="7">Tidak ada data.</td></tr>`;
+        renderEmpty('Tidak ada data.');
         return;
       }
 
       tbody.innerHTML = "";
       let totalHutang=0, totalPiutang=0, countBelum=0, countLunas=0;
 
-      rows.forEach(r=>{
-        const [id,nama,tipe,nominal,tanggal,catatan,sisa,status] = r;
+      rows.forEach(raw => {
+        // destructure defensively (some rows may have fewer columns)
+        const [id='', nama='', tipe='', nominalRaw='', tanggal='', catatan='', sisaRaw='', statusRaw=''] = raw.concat(Array(8 - raw.length).fill(''));
 
-        const isLunas = (status||"").toLowerCase().includes("lunas");
+        // normalize numbers
+        const nominal = toNumberFromSheet(nominalRaw);
+        const sisa = toNumberFromSheet(sisaRaw);
+
+        // STATUS detection: check 'belum' first, then 'lunas'
+        const sLow = (String(statusRaw || "")).toLowerCase();
+        let status = (statusRaw || "").trim();
+        let isLunas = false;
+        let isBelum = false;
+        if (sLow.indexOf("belum") !== -1) {
+          status = "Belum Lunas";
+          isBelum = true;
+        } else if (sLow.indexOf("lunas") !== -1) {
+          status = "Lunas";
+          isLunas = true;
+        } else {
+          // unknown -> treat as Belum Lunas (safe)
+          status = status || "Belum Lunas";
+          isBelum = !isLunas;
+        }
+
+        // sums
+        if ((String(tipe || "").toLowerCase()).includes("hutang")) totalHutang += nominal;
+        if ((String(tipe || "").toLowerCase()).includes("piutang")) totalPiutang += nominal;
+        if (isLunas) countLunas++; else countBelum++;
+
         const pillClass = isLunas ? "lunas" : "belum";
-
-        if((tipe||"").toLowerCase().includes("hutang")) totalHutang += Number(nominal||0);
-        if((tipe||"").toLowerCase().includes("piutang")) totalPiutang += Number(nominal||0);
-        if(isLunas) countLunas++; else countBelum++;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${nama}</td>
-          <td>${tipe}</td>
+          <td>${escapeHtml(nama)}</td>
+          <td style="min-width:100px">${escapeHtml(tipe)}</td>
           <td style="text-align:right">${fmtCur(nominal)}</td>
           <td>${fmtDate(tanggal)}</td>
-          <td>${catatan}</td>
+          <td>${escapeHtml(catatan)}</td>
           <td style="text-align:right">${fmtCur(sisa)}</td>
-          <td><span class="pill ${pillClass}">${status}</span></td>
+          <td><span class="pill ${pillClass}">${escapeHtml(status)}</span></td>
         `;
-
         tbody.appendChild(tr);
       });
 
+      // update summary
       totalHutangEl.textContent = fmtCur(totalHutang);
       totalPiutangEl.textContent = fmtCur(totalPiutang);
       countBelumEl.textContent = countBelum;
       countLunasEl.textContent = countLunas;
     })
-    .catch(()=>{
-      tbody.innerHTML = `<tr><td class="empty" colspan="7">Gagal mengambil data — pastikan Sheet sudah dipublish.</td></tr>`;
+    .catch(err=>{
+      console.error(err);
+      renderEmpty('Gagal mengambil data — pastikan Sheet sudah dipublish.');
     });
 }
 
 loadAndRender();
 setInterval(loadAndRender, 90000);
+
+/* small helper to escape HTML */
+function escapeHtml(s){ if (s===null||s===undefined) return ''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
 </script>
 
 </body>
