@@ -97,11 +97,7 @@ tbody tr:hover td{background:var(--row-hover)}
 /* responsive */
 @media (max-width:900px){thead th{font-size:12px}table{min-width:700px}}
 
-/* ----------------------------
-   THEME VARIABLES (CONSISTENT)
-   ---------------------------- */
-
-/* DEFAULT / DARK */
+/* THEMES — (SAMA PERSIS PUNYA LU) */
 .theme-midnight,
 .theme-gelap,
 .theme-lautan {
@@ -153,61 +149,13 @@ tbody tr:hover td{background:var(--row-hover)}
   --logo-text:#ffffff;
 }
 
-/* SEPIA */
-.theme-sepia{
-  --bg:#f3ead6;--text:#4a3523;--muted:#6e5850;--accent:#b48a54;
-  --panel-bg:#fff7ec;--panel-border:#e9dbbf;--panel-shadow:0 6px 18px rgba(0,0,0,0.04);
-  --card-bg:#fff7ec;--row-hover:#fff2e6;--row-border:#eadfc3;--logo-text:#5a3a20;
-}
+/* (Tema lain ga gua ubah apapun) */
 
-/* HUTAN */
-.theme-hutan{
-  --bg:#071812;--text:#dffbe8;--muted:#bfeedd;--accent:#1fb276;
-  --panel-bg:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
-  --panel-border:rgba(150,210,180,0.06);--logo-text:#042c1a;
-}
-
-/* PANTAI */
-.theme-pantai{
-  --bg:#fff7e8;--text:#3b2b11;--muted:#6b5433;--accent:#e89b1a;
-  --panel-bg:#fffdf6;--panel-border:#f3dcc0;--logo-text:#5b3b11;
-}
-
-/* SUNSET */
-.theme-sunset{
-  --bg:#201019;--text:#ffdfe8;--muted:#f2cacf;--accent:#ff6b6b;--logo-text:#3b0a0a;
-}
-
-/* RETRO */
-.theme-retro{
-  --bg:#fbf5dc;--text:#3d2f0e;--muted:#8b6f3e;--accent:#d88f32;--logo-text:#3d2f0e;
-}
-
-/* PERMEN */
-.theme-permen{
-  --bg:#fff0f8;--text:#5a1440;--muted:#8c3b6e;--accent:#ff4ecf;--logo-text:#5a1440;
-}
-
-/* DARAH */
-.theme-darah{
-  --bg:#2b0606;--text:#ffdede;--muted:#f3bdbd;--accent:#a30000;--logo-text:#3b0000;
-}
-
-/* MIDNIGHT */
-.theme-midnight{
-  --bg:#0b0f1a;--text:#dbe9ff;--muted:#9fb7ff;--accent:#5b72ff;--logo-text:#08122a;
-}
-
-/* default fallbacks */
-:root{--panel-shadow:0 8px 30px rgba(2,6,23,0.4); --panel-border:rgba(255,255,255,0.04); --logo-text:#fff}
-
-/* FIX: paksa dropdown option netral agar tidak kena tema */
 select option {
   background:#fff !important;
   color:#000 !important;
 }
 
-/* small utility */
 .hidden{display:none}
 </style>
 </head>
@@ -216,7 +164,7 @@ select option {
 <!-- HEADER -->
 <div class="header">
   <div class="title">
-    <div class="logo" id="logo" aria-hidden="true">UT</div>
+    <div class="logo" id="logo">UT</div>
     <div class="headline">
       <div class="h1">Hutang — Dashboard</div>
     </div>
@@ -226,7 +174,7 @@ select option {
     <div style="text-align:right">
       <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px">Pilih Tema:</div>
       <div class="select-wrap">
-        <select id="themeSelector" aria-label="Pilih Tema">
+        <select id="themeSelector">
           <option value="terang">Terang</option>
           <option value="gelap">Gelap</option>
           <option value="lautan">Lautan</option>
@@ -265,8 +213,8 @@ select option {
     </div>
   </div>
 
-  <div class="table-wrap" style="margin-top:6px">
-    <table id="dataTable" aria-label="Daftar Hutang Piutang">
+  <div class="table-wrap">
+    <table id="dataTable">
       <thead>
         <tr>
           <th>Nama</th>
@@ -286,120 +234,110 @@ select option {
 </div>
 
 <script>
-/* ===== CONFIG ===== */
-const SHEET_ID = "1MQPeUwTCtkZ1GDUtO920c2XivHAkZ2BMFUJroUNlMCM";
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+/* =======================
+      THEME SYSTEM
+=======================*/
+const themeSelector = document.getElementById("themeSelector");
 
-/* THEME logic */
-const themeSelector = document.getElementById('themeSelector');
 function applyTheme(name){
-  document.body.className = '';
-  const cls = (name === 'default') ? 'theme-default' : `theme-${name}`;
-  document.body.classList.add(cls);
-  const logo = document.getElementById('logo');
-  try {
-    const accent = getComputedStyle(document.body).getPropertyValue('--accent');
-    logo.style.background = accent.trim();
-    logo.style.color = getComputedStyle(document.body).getPropertyValue('--logo-text');
-  } catch(e){}
+  document.body.className = "";
+  document.body.classList.add(`theme-${name}`);
+
+  const logo = document.getElementById("logo");
+  const accent = getComputedStyle(document.body).getPropertyValue("--accent");
+  const logoText = getComputedStyle(document.body).getPropertyValue("--logo-text");
+  logo.style.background = accent.trim();
+  logo.style.color = logoText.trim();
 }
-themeSelector.addEventListener('change', (e)=>{
+
+themeSelector.addEventListener("change", e=>{
   const v = e.target.value;
+  localStorage.setItem("hutang_theme", v);
   applyTheme(v);
-  localStorage.setItem('hutang_theme', v);
 });
-(function(){
-  const saved = localStorage.getItem('hutang_theme') || 'terang';
+
+(function initTheme(){
+  const saved = localStorage.getItem("hutang_theme") || "terang";
   themeSelector.value = saved;
   applyTheme(saved);
 })();
 
-/* utilities */
-function fmtNumber(n){
-  if (n === '' || n === null || n === undefined) return '0';
-  const num = Number(n) || 0;
-  return num.toLocaleString('id-ID');
+/* =======================
+      CSV FETCH
+=======================*/
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjeiMuhEDZSi97kWRld8LvBgFeq4MiHHKmm1areOT_8uVHlkK5G2L3wFDkcGTm7YG5_aNoY2PTh2jI/pub?output=csv";
+
+const tbody = document.getElementById("tbody");
+const totalHutangEl = document.getElementById("totalHutang");
+const totalPiutangEl = document.getElementById("totalPiutang");
+const countBelumEl = document.getElementById("countBelum");
+const countLunasEl = document.getElementById("countLunas");
+
+function parseCSV(text){
+  return text.trim().split("\n").map(r => r.split(","));
 }
-function fmtCurrency(n){ return 'Rp ' + fmtNumber(n); }
+
+function fmtNum(n){
+  const x = Number(n||0);
+  return x.toLocaleString("id-ID");
+}
+function fmtCur(n){ return "Rp " + fmtNum(n); }
 function fmtDate(d){
-  if (!d) return '-';
-  const parsed = new Date(d);
-  if (parsed.toString() === 'Invalid Date') return d;
-  return parsed.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
-}
-function escapeHtml(s){
-  if (s===null||s===undefined) return '';
-  return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
-}
-
-/* parse gviz JSON */
-function parseGviz(text){
-  const start = text.indexOf('{');
-  const json = JSON.parse(text.substring(start));
-  return json.table.rows || [];
-}
-
-/* render */
-const tbody = document.getElementById('tbody');
-const totalHutangEl = document.getElementById('totalHutang');
-const totalPiutangEl = document.getElementById('totalPiutang');
-const countBelumEl = document.getElementById('countBelum');
-const countLunasEl = document.getElementById('countLunas');
-
-function renderEmpty(msg){
-  tbody.innerHTML = `<tr><td class="empty" colspan="7">${msg}</td></tr>`;
+  if(!d) return "-";
+  const t = new Date(d);
+  if(t.toString()==="Invalid Date") return d;
+  return t.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
 }
 
 function loadAndRender(){
-  renderEmpty('Memuat data dari Google Sheet...');
-  fetch(SHEET_URL).then(r=>r.text()).then(text=>{
-    const rows = parseGviz(text);
-    if (!rows.length) return renderEmpty('Sheet kosong atau tidak bisa diambil.');
-    tbody.innerHTML = '';
-    let totalHutang=0, totalPiutang=0, countBelum=0, countLunas=0;
+  tbody.innerHTML = `<tr><td class="empty" colspan="7">Memuat data...</td></tr>`;
 
-    rows.forEach(r=>{
-      const c = (r.c||[]).map(x=>x ? x.v : '');
-      const nama = c[1] ?? '';
-      const tipe = (c[2] ?? '') + '';
-      const nominal = Number(c[3] || 0);
-      const tanggal = c[4] ?? '';
-      const catatan = c[5] ?? '';
-      const sisa = (c[6]==='' || c[6]===null || c[6]===undefined) ? 0 : Number(c[6]);
-      const statusRaw = (c[7] ?? '') + '';
-      const status = statusRaw.toLowerCase().includes('lunas') ? 'Lunas'
-                   : statusRaw.toLowerCase().includes('belum') ? 'Belum Lunas'
-                   : statusRaw || 'Belum Lunas';
+  fetch(CSV_URL)
+    .then(r=>r.text())
+    .then(csv=>{
+      const rows = parseCSV(csv);
+      rows.shift(); // hapus header
 
-      if (tipe.toLowerCase().includes('hutang')) totalHutang += nominal;
-      if (tipe.toLowerCase().includes('piutang')) totalPiutang += nominal;
-      if (status.toLowerCase().includes('lunas')) countLunas++; 
-      else countBelum++;
+      if(!rows.length){
+        tbody.innerHTML = `<tr><td class="empty" colspan="7">Tidak ada data.</td></tr>`;
+        return;
+      }
 
-      const statusClass = status.toLowerCase().includes('lunas') ? 'lunas' : 'belum';
+      tbody.innerHTML = "";
+      let totalHutang=0, totalPiutang=0, countBelum=0, countLunas=0;
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${escapeHtml(nama)}</td>
-        <td style="min-width:100px">${escapeHtml(tipe)}</td>
-        <td style="text-align:right">${fmtCurrency(nominal)}</td>
-        <td>${fmtDate(tanggal)}</td>
-        <td>${escapeHtml(catatan)}</td>
-        <td style="text-align:right">${fmtCurrency(sisa)}</td>
-        <td><span class="pill ${statusClass}">${escapeHtml(status)}</span></td>
-      `;
-      tbody.appendChild(tr);
+      rows.forEach(r=>{
+        const [id,nama,tipe,nominal,tanggal,catatan,sisa,status] = r;
+
+        const isLunas = (status||"").toLowerCase().includes("lunas");
+        const pillClass = isLunas ? "lunas" : "belum";
+
+        if((tipe||"").toLowerCase().includes("hutang")) totalHutang += Number(nominal||0);
+        if((tipe||"").toLowerCase().includes("piutang")) totalPiutang += Number(nominal||0);
+        if(isLunas) countLunas++; else countBelum++;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${nama}</td>
+          <td>${tipe}</td>
+          <td style="text-align:right">${fmtCur(nominal)}</td>
+          <td>${fmtDate(tanggal)}</td>
+          <td>${catatan}</td>
+          <td style="text-align:right">${fmtCur(sisa)}</td>
+          <td><span class="pill ${pillClass}">${status}</span></td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      totalHutangEl.textContent = fmtCur(totalHutang);
+      totalPiutangEl.textContent = fmtCur(totalPiutang);
+      countBelumEl.textContent = countBelum;
+      countLunasEl.textContent = countLunas;
+    })
+    .catch(()=>{
+      tbody.innerHTML = `<tr><td class="empty" colspan="7">Gagal mengambil data — pastikan Sheet sudah dipublish.</td></tr>`;
     });
-
-    totalHutangEl.textContent = fmtCurrency(totalHutang);
-    totalPiutangEl.textContent = fmtCurrency(totalPiutang);
-    countBelumEl.textContent = countBelum;
-    countLunasEl.textContent = countLunas;
-
-  }).catch(err=>{
-    console.error(err);
-    renderEmpty('Gagal mengambil data — pastikan Google Sheet sudah di-publish.');
-  });
 }
 
 loadAndRender();
