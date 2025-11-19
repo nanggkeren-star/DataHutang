@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Hutang Piutang</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef5ff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #1a4f9c;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    th {
+      background: #1a4f9c;
+      color: white;
+      padding: 12px;
+    }
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    tr:hover {
+      background: #f2f7ff;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Daftar Hutang / Piutang</h1>
+
+  <table id="sheetTable">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Tipe</th>
+        <th>Nominal</th>
+        <th>Tanggal</th>
+        <th>Catatan</th>
+        <th>Sisa Utang</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const url = "https://docs.google.com/spreadsheets/d/1MQPeUwTCtkZ1GDUtO920c2XivHAkZ2BMFUJroUNlMCM/gviz/tq?tqx=out:json";
+
+    fetch(url)
+      .then(res => res.text())
+      .then(text => {
+        const json = JSON.parse(text.substr(47).slice(0, -2));
+        const rows = json.table.rows;
+
+        const tbody = document.querySelector("#sheetTable tbody");
+
+        rows.forEach(r => {
+          const c = r.c.map(v => v ? v.v : "");
+
+          // c = [id, nama, tipe, nominal, tanggal, catatan, sisa, status]
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${c[1]}</td>
+            <td>${c[2]}</td>
+            <td>${c[3]}</td>
+            <td>${c[4]}</td>
+            <td>${c[5]}</td>
+            <td>${c[6]}</td>
+            <td>${c[7]}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+  </script>
+
+</body>
+</html>
