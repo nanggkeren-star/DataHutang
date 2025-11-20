@@ -374,7 +374,7 @@ function renderEmpty(msg){
 function loadAndRender(){
   renderEmpty('Memuat data dari Google Sheet...');
 
-  fetch(CSV_URL)
+fetch(CSV_URL + "&time=" + Date.now())
     .then(r=>r.text())
     .then(csv=>{
       const rows = parseCSV(csv);
