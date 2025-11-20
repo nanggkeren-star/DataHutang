@@ -446,8 +446,10 @@ function loadAndRender(){
     });
 }
 
-loadAndRender();
-setInterval(loadAndRender, 60000);
+setInterval(() => {
+    console.log("Auto reload jalan...");
+    loadAndRender();
+}, 60000);
 
 /* small helper to escape HTML */
 function escapeHtml(s){ if (s===null||s===undefined) return ''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
