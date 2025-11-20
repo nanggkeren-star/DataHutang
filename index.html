@@ -1,411 +1,292 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Hutang — Dashboard</title>
+<meta charset="UTF-8" />
+<title>Hutang Piutang</title>
 
 <style>
-/* ----------------------
-   BASE / LAYOUT
-   ---------------------- */
-:root{
-  --radius:12px;
-  --gap:14px;
-  --muted-alpha:0.7;
-  --transition: .22s ease;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  transition:background var(--transition), color var(--transition);
-  padding:20px;
-  color:var(--text);
-  background:var(--bg);
-  min-height:100vh;
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 20px;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* header */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:16px;
-}
-.title{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.logo {
-  width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-weight:700;color:var(--logo-text);background:var(--accent);flex-shrink:0;
-  box-shadow:0 6px 18px rgba(0,0,0,0.15);
-}
-.headline {
-  line-height:1;
-}
-.h1{font-size:18px;margin:0;font-weight:700;color:var(--text)}
-.h2{font-size:12px;margin:0;color:var(--muted);font-weight:600}
-
-/* controls */
-.controls{display:flex;gap:12px;align-items:center}
-.select-wrap{display:inline-flex;align-items:center;gap:8px}
-select#themeSelector{
-  -webkit-appearance:none;appearance:none;
-  padding:8px 12px;border-radius:10px;border:1px solid var(--panel-border);
-  background:var(--panel-bg);color:var(--text);font-weight:600;cursor:pointer;
-  min-width:170px;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-/* panel */
-.panel{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:var(--radius);
-  padding:14px;
-  box-shadow:var(--panel-shadow);
+h1 {
+  margin: 0;
+  font-weight: 600;
 }
 
-/* summary cards */
-.summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.card{min-width:150px;padding:12px;border-radius:10px;background:var(--card-bg);border:1px solid var(--panel-border)}
-.card h4{margin:0;font-size:12px;color:var(--muted)}
-.card p{margin:8px 0 0;font-size:16px;font-weight:700;color:var(--text)}
-
-/* table */
-.table-wrap{overflow:auto;border-radius:10px}
-table{width:100%;border-collapse:collapse;min-width:820px}
-thead th{
-  position:sticky;top:0;padding:12px 14px;text-align:left;font-size:13px;
-  background:linear-gradient(180deg,var(--accent) 0%, color-mix(in srgb, var(--accent) 85%, transparent) 100%);
-  color:var(--header-text);border-bottom:1px solid var(--table-border);
+label {
+  font-weight: 600;
+  margin-right: 8px;
 }
-tbody td{padding:12px 14px;border-bottom:1px solid var(--row-border);background:var(--row-bg);color:var(--text)}
-tbody tr:hover td{background:var(--row-hover)}
-.pill{display:inline-block;padding:7px 12px;border-radius:999px;font-weight:700;font-size:12px; white-space:nowrap;}
-.pill.lunas{background:color-mix(in srgb, #16a34a 12%, transparent);color:var(--ok);border:1px solid rgba(22,163,74,0.12)}
-.pill.belum{background:color-mix(in srgb, #f59e0b 12%, transparent);color:var(--warn);border:1px solid rgba(245,158,11,0.12)}
 
-/* helper */
-.empty{text-align:center;padding:30px;color:var(--muted)}
+select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #ddd);
+  background: var(--table-bg, #fff);
+  color: var(--text, #000);
+  font-size: 14px;
+}
 
-/* responsive */
-@media (max-width:900px){thead th{font-size:12px}table{min-width:700px}}
+/* ============================================
+   THEME SYSTEM
+============================================ */
+.theme-terang {
+  --bg: #f5f7fa;
+  --text: #121212;
+  --accent: #1a73e8;
+  --table-bg: #ffffff;
+  --border: #dcdcdc;
+}
 
-/* THEMES — (SAMA PERSIS PUNYA LU) */
-.theme-midnight,
-.theme-gelap,
+.theme-gelap {
+  --bg: #1d1f27;
+  --text: #f5f5f5;
+  --accent: #4aa8ff;
+  --table-bg: #2c2f37;
+  --border: #3a3d46;
+}
+
+.theme-sepia {
+  --bg: #f3eacc;
+  --text: #4e3b2f;
+  --accent: #b48a54;
+  --table-bg: #fff8e6;
+  --border: #d8c7a3;
+}
+
+.theme-gurun {
+  --bg: #f7f1e3;
+  --text: #5a4632;
+  --accent: #c49f63;
+  --table-bg: #fffdf8;
+  --border: #e8d9b8;
+}
+
+.theme-darah {
+  --bg: #2a0303;
+  --text: #ffdddd;
+  --accent: #a30000;
+  --table-bg: #3b0606;
+  --border: #5a0c0c;
+}
+
+.theme-hutan {
+  --bg: #e8fff0;
+  --text: #0e4d2d;
+  --accent: #1f8f55;
+  --table-bg: #ffffff;
+  --border: #bfe9d1;
+}
+
 .theme-lautan {
-  --bg:#0a1521;
-  --text:#e6f0ff;
-  --muted:rgba(230,240,255,0.75);
-  --accent:#2296ee;
-  --panel-bg:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
-  --panel-border:rgba(255,255,255,0.03);
-  --panel-shadow:0 8px 28px rgba(2,6,23,0.55);
-  --card-bg:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
-  --row-bg:transparent;
-  --row-hover:rgba(255,255,255,0.02);
-  --row-border:rgba(255,255,255,0.03);
-  --table-border:rgba(255,255,255,0.04);
-  --header-text:#fff;
-  --ok:#16a34a;
-  --warn:#f59e0b;
-  --logo-text:#042225;
+  --bg: #191d2b;
+  --text: #18cdc1;
+  --accent: #1ae8da;
+  --table-bg: #ffffff;
+  --border: #cfe2ff;
 }
 
-/* LAUTAN FIX */
-.theme-lautan{
-  --bg:#0f1720;
-  --text:#cfeeff;
-  --muted:rgba(160,220,255,0.7);
-  --accent:#22d3ee;
-  --panel-bg:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
-  --logo-text:#04202b;
+.theme-pantai {
+  --bg: #fff7e6;
+  --text: #4d320a;
+  --accent: #e89b1a;
+  --table-bg: #ffffff;
+  --border: #f3d7a5;
 }
 
-/* TERANG */
-.theme-terang{
-  --bg:#f6f8fb;
-  --text:#0b1220;
-  --muted:#5b6b75;
-  --accent:#1a73e8;
-  --panel-bg:#ffffff;
-  --panel-border:#e6eef9;
-  --panel-shadow:0 6px 18px rgba(19,38,77,0.06);
-  --card-bg:#fff;
-  --row-bg:#fff;
-  --row-hover:#f4f8ff;
-  --row-border:#eef3fb;
-  --table-border:#e6eef9;
-  --header-text:#fff;
-  --ok:#057a31;
-  --warn:#b45309;
-  --logo-text:#ffffff;
+.theme-sunset {
+  --bg: #ffe8e8;
+  --text: #4d0a0a;
+  --accent: #ff3d3d;
+  --table-bg: #ffffff;
+  --border: #f7b5b5;
 }
 
-/* (Tema lain ga gua ubah apapun) */
-
-select option {
-  background:#fff !important;
-  color:#000 !important;
+.theme-permen {
+  --bg: #ffe9fa;
+  --text: #4d0a34;
+  --accent: #ff4ecf;
+  --table-bg: #ffffff;
+  --border: #f3c2e8;
 }
 
-.hidden{display:none}
+.theme-retro {
+  --bg: #000000;
+  --text: #cb03a0;
+  --accent: #ff00c8;
+  --table-bg: #f8f8f8;
+  --border: #cb03a0;
+}
+
+.theme-midnight {
+  --bg: #0d0f16;
+  --text: #d8e1ff;
+  --accent: #5b72ff;
+  --table-bg: #161928;
+  --border: #2a3050;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: var(--table-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+}
+
+th {
+  background: var(--accent);
+  color: white;
+  padding: 14px;
+  font-size: 15px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.row-lunas {
+  background: #e8ffe8 !important;
+}
+
+.row-belum {
+  background: #fff7d1 !important;
+}
 </style>
 </head>
-<body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="title">
-    <div class="logo" id="logo">UT</div>
-    <div class="headline">
-      <div class="h1">Hutang — Dashboard</div>
-    </div>
-  </div>
+<body class="theme-terang">
 
-  <div class="controls">
-    <div style="text-align:right">
-      <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px">Pilih Tema:</div>
-      <div class="select-wrap">
-        <select id="themeSelector">
-          <option value="terang">Terang</option>
-          <option value="gelap">Gelap</option>
-          <option value="lautan">Lautan</option>
-          <option value="midnight">Midnight</option>
-          <option value="hutan">Hutan</option>
-          <option value="pantai">Pantai</option>
-          <option value="sunset">Sunset</option>
-          <option value="sepia">Sepia</option>
-          <option value="retro">Retro</option>
-          <option value="permen">Permen</option>
-          <option value="darah">Darah</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
+<header>
+  <h1>Hutang / Piutang</h1>
 
-<!-- PANEL -->
-<div class="panel">
-  <div class="summary" id="summaryRow">
-    <div class="card">
-      <h4>Total Hutang</h4>
-      <p id="totalHutang">Rp 0</p>
-    </div>
-    <div class="card">
-      <h4>Total Piutang</h4>
-      <p id="totalPiutang">Rp 0</p>
-    </div>
-    <div class="card">
-      <h4>Belum Lunas</h4>
-      <p id="countBelum">0</p>
-    </div>
-    <div class="card">
-      <h4>Lunas</h4>
-      <p id="countLunas">0</p>
-    </div>
+  <div>
+    <label>Pilih Tema:</label>
+    <select id="themeSelector">
+      <option value="terang">Terang</option>
+      <option value="gelap">Gelap</option>
+      <option value="sepia">Sepia</option>
+      <option value="gurun">Gurun</option>
+      <option value="darah">Darah</option>
+      <option value="hutan">Hutan</option>
+      <option value="lautan">Lautan</option>
+      <option value="pantai">Pantai</option>
+      <option value="sunset">Sunset</option>
+      <option value="permen">Permen</option>
+      <option value="retro">Retro</option>
+      <option value="midnight">Midnight</option>
+    </select>
   </div>
+</header>
 
-  <div class="table-wrap">
-    <table id="dataTable">
-      <thead>
-        <tr>
-          <th>Nama</th>
-          <th>Type</th>
-          <th style="text-align:right">Nominal</th>
-          <th>Tanggal</th>
-          <th>Keterangan</th>
-          <th style="text-align:right">Sisa Hutang</th>
-          <th style="width:120px">Status</th>
-        </tr>
-      </thead>
-      <tbody id="tbody">
-        <tr><td class="empty" colspan="7">Memuat data...</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<table id="sheetTable">
+  <thead>
+    <tr>
+      <th>Nama</th>
+      <th>Tipe</th>
+      <th>Nominal</th>
+      <th>Tanggal</th>
+      <th>Keterangan</th>
+      <th>Sisa Utang</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
 <script>
-/* =======================
-      THEME SYSTEM
-=======================*/
-const themeSelector = document.getElementById("themeSelector");
+const sheetUrl =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjeiMuhEDZSi97kWRld8LvBgFeq4MiHHKmm1areOT_8uVHlkK5G2L3wFDkcGTm7YG5_aNoY2PTh2jI/pub?output=csv";
 
-function applyTheme(name){
-  document.body.className = "";
-  document.body.classList.add(`theme-${name}`);
+const tbody = document.querySelector("#sheetTable tbody");
 
-  const logo = document.getElementById("logo");
-  const accent = getComputedStyle(document.body).getPropertyValue("--accent");
-  const logoText = getComputedStyle(document.body).getPropertyValue("--logo-text");
-  logo.style.background = accent.trim();
-  logo.style.color = logoText.trim();
+function formatRupiah(num) {
+  return Number(num).toLocaleString("id-ID");
 }
 
-themeSelector.addEventListener("change", e=>{
-  const v = e.target.value;
-  localStorage.setItem("hutang_theme", v);
-  applyTheme(v);
-});
-
-(function initTheme(){
-  const saved = localStorage.getItem("hutang_theme") || "terang";
-  themeSelector.value = saved;
-  applyTheme(saved);
-})();
-
-/* =======================
-      CSV FETCH
-=======================*/
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjeiMuhEDZSi97kWRld8LvBgFeq4MiHHKmm1areOT_8uVHlkK5G2L3wFDkcGTm7YG5_aNoY2PTh2jI/pub?output=csv";
-
-const tbody = document.getElementById("tbody");
-const totalHutangEl = document.getElementById("totalHutang");
-const totalPiutangEl = document.getElementById("totalPiutang");
-const countBelumEl = document.getElementById("countBelum");
-const countLunasEl = document.getElementById("countLunas");
-
-/* parse CSV naive (ok for your sheet). returns array of rows (arrays) */
-function parseCSV(text){
-  return text.trim().split("\n").map(r => r.split(","));
+/* 🔧 normalisasi angka biar 700 → 700000 */
+function fixNumber(n) {
+  if (!n) return 0;
+  n = String(n).replace(/\D/g, "");
+  if (n.length <= 3) return Number(n) * 1000;
+  return Number(n);
 }
 
-/* normalize numeric strings: remove thousand separators (.) and spaces, convert comma->dot if needed */
-function toNumberFromSheet(val){
-  if (val === null || val === undefined) return 0;
-  let s = String(val).trim();
-  if (s === "") return 0;
-  // remove non-digit except minus and comma/dot
-  // first remove spaces
-  s = s.replace(/\s/g, "");
-  // if format like "700.000" (thousand separator) -> remove dots
-  // if format like "1,234" (decimal comma) -> convert comma to dot
-  // strategy: if contains '.' and length of last segment 3 -> assume thousand separators -> remove dots
-  if (s.indexOf(".") !== -1) {
-    const parts = s.split(".");
-    const last = parts[parts.length - 1];
-    if (last.length === 3) {
-      s = parts.join(""); // remove dots
-    } else {
-      // maybe decimal dot, leave it
-      s = s;
-    }
-  }
-  // convert comma decimal to dot
-  if (s.indexOf(",") !== -1 && s.indexOf(".") === -1) {
-    s = s.replace(",", ".");
-  } else {
-    // remove remaining commas used as thousand sep
-    s = s.replace(/,/g, "");
-  }
-  const n = Number(s);
-  return isNaN(n) ? 0 : n;
+function formatTanggal(dateStr) {
+  const d = new Date(dateStr);
+  if (d.toString() === "Invalid Date") return dateStr;
+  return d.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
-function fmtNum(n){
-  const x = Number(n||0);
-  return x.toLocaleString("id-ID");
-}
-function fmtCur(n){ return "Rp " + fmtNum(n); }
-function fmtDate(d){
-  if(!d) return "-";
-  const t = new Date(d);
-  if(t.toString()==="Invalid Date") return d;
-  return t.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
-}
-
-function renderEmpty(msg){
-  tbody.innerHTML = `<tr><td class="empty" colspan="7">${msg}</td></tr>`;
-}
-
-function loadAndRender(){
-  renderEmpty('Memuat data dari Google Sheet...');
-
-  fetch(CSV_URL)
-    .then(r=>r.text())
-    .then(csv=>{
-      const rows = parseCSV(csv);
-      // assume header first row
-      rows.shift();
-
-      if(!rows.length){
-        renderEmpty('Tidak ada data.');
-        return;
-      }
-
+function loadCSV() {
+  fetch(sheetUrl)
+    .then((res) => res.text())
+    .then((csv) => {
+      const rows = csv.trim().split("\n").map(r => r.split(","));
       tbody.innerHTML = "";
-      let totalHutang=0, totalPiutang=0, countBelum=0, countLunas=0;
 
-      rows.forEach(raw => {
-        // destructure defensively (some rows may have fewer columns)
-        const [id='', nama='', tipe='', nominalRaw='', tanggal='', catatan='', sisaRaw='', statusRaw=''] = raw.concat(Array(8 - raw.length).fill(''));
-
-        // normalize numbers
-        const nominal = toNumberFromSheet(nominalRaw);
-        const sisa = toNumberFromSheet(sisaRaw);
-
-        // STATUS detection: check 'belum' first, then 'lunas'
-        const sLow = (String(statusRaw || "")).toLowerCase();
-        let status = (statusRaw || "").trim();
-        let isLunas = false;
-        let isBelum = false;
-        if (sLow.indexOf("belum") !== -1) {
-          status = "Belum Lunas";
-          isBelum = true;
-        } else if (sLow.indexOf("lunas") !== -1) {
-          status = "Lunas";
-          isLunas = true;
-        } else {
-          // unknown -> treat as Belum Lunas (safe)
-          status = status || "Belum Lunas";
-          isBelum = !isLunas;
-        }
-
-        // sums
-        if ((String(tipe || "").toLowerCase()).includes("hutang")) totalHutang += nominal;
-        if ((String(tipe || "").toLowerCase()).includes("piutang")) totalPiutang += nominal;
-        if (isLunas) countLunas++; else countBelum++;
-
-        const pillClass = isLunas ? "lunas" : "belum";
+      rows.slice(1).forEach((c) => {
+        const nama = c[1];
+        const tipe = c[2];
+        const nominal = fixNumber(c[3]);
+        const tgl = c[4];
+        const ket = c[5];
+        const sisa = fixNumber(c[6]);
+        const status = c[7];
 
         const tr = document.createElement("tr");
+
+        if (status === "Lunas") tr.classList.add("row-lunas");
+        else tr.classList.add("row-belum");
+
         tr.innerHTML = `
-          <td>${escapeHtml(nama)}</td>
-          <td style="min-width:100px">${escapeHtml(tipe)}</td>
-          <td style="text-align:right">${fmtCur(nominal)}</td>
-          <td>${fmtDate(tanggal)}</td>
-          <td>${escapeHtml(catatan)}</td>
-          <td style="text-align:right">${fmtCur(sisa)}</td>
-          <td><span class="pill ${pillClass}">${escapeHtml(status)}</span></td>
+          <td>${nama}</td>
+          <td>${tipe}</td>
+          <td>Rp ${formatRupiah(nominal)}</td>
+          <td>${formatTanggal(tgl)}</td>
+          <td>${ket}</td>
+          <td>Rp ${formatRupiah(sisa)}</td>
+          <td>${status}</td>
         `;
         tbody.appendChild(tr);
       });
-
-      // update summary
-      totalHutangEl.textContent = fmtCur(totalHutang);
-      totalPiutangEl.textContent = fmtCur(totalPiutang);
-      countBelumEl.textContent = countBelum;
-      countLunasEl.textContent = countLunas;
-    })
-    .catch(err=>{
-      console.error(err);
-      renderEmpty('Gagal mengambil data — pastikan Sheet sudah dipublish.');
     });
 }
 
-loadAndRender();
-setInterval(loadAndRender, 90000);
+loadCSV();
+setInterval(loadCSV, 60000);
 
-/* small helper to escape HTML */
-function escapeHtml(s){ if (s===null||s===undefined) return ''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+/* THEME SWITCH */
+document.getElementById("themeSelector").addEventListener("change", (e) => {
+  document.body.className = `theme-${e.target.value}`;
+});
 </script>
 
 </body>
