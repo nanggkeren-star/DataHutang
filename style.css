@@ -87,17 +87,22 @@ select#themeSelector{
 .card p{margin:8px 0 0;font-size:16px;font-weight:700;color:var(--text)}
 
 /* table */
-.table-wrap{overflow:auto;border-radius:10px}
+.table-wrap{
+  overflow:auto;
+  border-radius:10px;
+
+  /* FIX UTAMA BIAR HEADER BIRU FULL */
+  margin-left:-14px;
+  margin-right:-14px;
+  width:calc(100% + 28px);
+}
+
 table{width:100%;border-collapse:collapse;min-width:820px}
 thead th{
-  position:sticky;
-  top:0;
+  background: var(--accent) !important;
   padding:12px 14px;
+  color:#fff;
   text-align:left;
-  font-size:13px;
-  background: var(--accent); /* FULL solid blue */
-  color:var(--header-text);
-  border-bottom:1px solid var(--table-border);
 }
 
 tbody td{padding:12px 14px;border-bottom:1px solid var(--row-border);background:var(--row-bg);color:var(--text)}
@@ -137,15 +142,10 @@ select option {
 body, .card, .container, .section, .item, .text, .btn {
   transition: background-color 0.35s ease, color 0.35s ease;
 }
-/* Header biru full width */
-.panel .table-wrap {
-  margin-left: -14px;
-  margin-right: -14px;
-  width: calc(100% + 28px);
-  border-radius: 10px;
-  overflow: hidden;
-}
+/* Rata kanan kolom angka */
 td:nth-child(3),
-td:nth-child(6) {
-  text-align: right;
+td:nth-child(6),
+th:nth-child(3),
+th:nth-child(6){
+  text-align:right !important;
 }

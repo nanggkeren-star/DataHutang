@@ -87,7 +87,7 @@ fetch(GVIZ_URL, { cache: "no-store" })
         <td>${nama}</td>
         <td>${type}</td>
         <td>${formatRupiah(nominalNum)}</td>
-        <td>${tanggal}</td>
+        <td>${fmtDate(tanggal)}</td>
         <td>${keterangan}</td>
         <td>${formatRupiah(sisaNum)}</td>
         <td class="${status === "Lunas" ? "text-green" : "text-red"}">${status}</td>
