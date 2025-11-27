@@ -40,7 +40,7 @@ const countBelumEl = document.getElementById("countBelum");
 const countLunasEl = document.getElementById("countLunas");
 
 function formatRupiah(n) {
-  return "Rp " + Number(n).toLocaleString("id-ID", {
+  return "Rp " + parseInt(n).toLocaleString("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });
@@ -72,8 +72,8 @@ fetch(GVIZ_URL, { cache: "no-store" })
       ] = r.c.map(c => c ? c.v : "");
 
       // hitung
-      let nominalNum = Number(String(nominal).replace(/\./g, "").replace(",", "."));
-      let sisaNum = Number(String(sisa).replace(/\./g, "").replace(",", "."));
+      let nominalNum = Math.floor(Number(String(nominal).replace(/\./g, "").replace(",", ".")));
+      let sisaNum = Math.floor(Number(String(sisa).replace(/\./g, "").replace(",", ".")));
 
       if (type === "Hutang") totalHutang += sisaNum;
       if (type === "Piutang") totalPiutang += sisaNum;
