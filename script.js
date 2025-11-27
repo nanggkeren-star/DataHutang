@@ -40,7 +40,10 @@ const countBelumEl = document.getElementById("countBelum");
 const countLunasEl = document.getElementById("countLunas");
 
 function formatRupiah(n) {
-  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
+  return "Rp " + Number(n).toLocaleString("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
 }
 
 fetch(GVIZ_URL, { cache: "no-store" })

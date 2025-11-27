@@ -90,10 +90,16 @@ select#themeSelector{
 .table-wrap{overflow:auto;border-radius:10px}
 table{width:100%;border-collapse:collapse;min-width:820px}
 thead th{
-  position:sticky;top:0;padding:12px 14px;text-align:left;font-size:13px;
-  background:linear-gradient(180deg,var(--accent) 0%, color-mix(in srgb, var(--accent) 85%, transparent) 100%);
-  color:var(--header-text);border-bottom:1px solid var(--table-border);
+  position:sticky;
+  top:0;
+  padding:12px 14px;
+  text-align:left;
+  font-size:13px;
+  background: var(--accent); /* FULL solid blue */
+  color:var(--header-text);
+  border-bottom:1px solid var(--table-border);
 }
+
 tbody td{padding:12px 14px;border-bottom:1px solid var(--row-border);background:var(--row-bg);color:var(--text)}
 tbody tr:hover td{background:var(--row-hover)}
 .pill{display:inline-block;padding:7px 12px;border-radius:999px;font-weight:700;font-size:12px; white-space:nowrap;}
