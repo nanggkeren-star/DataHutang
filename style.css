@@ -137,10 +137,15 @@ select option {
 body, .card, .container, .section, .item, .text, .btn {
   transition: background-color 0.35s ease, color 0.35s ease;
 }
-/* Bikin header biru nempel kiri–kanan */
-.table-wrap {
-  margin-left: -20px;   /* sama dengan body padding */
-  margin-right: -20px;
+/* Header biru full width */
+.panel .table-wrap {
+  margin-left: -14px;
+  margin-right: -14px;
+  width: calc(100% + 28px);
   border-radius: 10px;
-  overflow: hidden;     /* penting biar header tetap rounded */
+  overflow: hidden;
+}
+td:nth-child(3),
+td:nth-child(6) {
+  text-align: right;
 }
