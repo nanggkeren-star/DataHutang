@@ -137,3 +137,10 @@ select option {
 body, .card, .container, .section, .item, .text, .btn {
   transition: background-color 0.35s ease, color 0.35s ease;
 }
+/* Bikin header biru nempel kiri–kanan */
+.table-wrap {
+  margin-left: -20px;   /* sama dengan body padding */
+  margin-right: -20px;
+  border-radius: 10px;
+  overflow: hidden;     /* penting biar header tetap rounded */
+}
