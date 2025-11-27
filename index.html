@@ -4,7 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hutang — Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- CACHE BUSTER -->
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
 
@@ -22,8 +24,8 @@
       <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px">Pilih Tema:</div>
       <div class="select-wrap">
         <select id="themeSelector">
-          <option value="lautan">Lautan</button>
-          <option value="retro">Retro</button>
+          <option value="lautan">Lautan</option>
+          <option value="retro">Retro</option>
         </select>
       </div>
     </div>
@@ -55,6 +57,7 @@
     <table id="dataTable">
       <thead>
         <tr>
+          <th style="width:60px;">ID</th>
           <th>Nama</th>
           <th>Type</th>
           <th style="text-align:right">Nominal</th>
@@ -64,13 +67,15 @@
           <th style="width:120px">Status</th>
         </tr>
       </thead>
+
       <tbody id="tbody">
-        <tr><td class="empty" colspan="7">Memuat data...</td></tr>
+        <tr><td class="empty" colspan="8">Memuat data...</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
-<script src="script.js"></script>
+<!-- CACHE BUSTER -->
+<script src="script.js?v=4"></script>
 </body>
 </html>
