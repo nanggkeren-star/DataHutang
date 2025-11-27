@@ -31,8 +31,7 @@ themeSelector.addEventListener("change", e=>{
       CSV FETCH
 =======================*/
 /* Ganti CSV_URL kalau perlu; ini URL publish CSV yang kamu pakai */
-const SHEET_ID = "1MQPeUwTCtkZ1GDUtO920c2XivHAkZ2BMFUJroUNlMCM";
-const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq=select%20*&_=${Date.now()}`;
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjeiMuhEDZSi97kWRld8LvBgFeq4MiHHKmm1areOT_8uVHlkK5G2L3wFDkcGTm7YG5_aNoY2PTh2jI/pub?gid=0&single=true&output=csv";
 
 const tbody = document.getElementById("tbody");
 const totalHutangEl = document.getElementById("totalHutang");
