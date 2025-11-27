@@ -30,8 +30,8 @@ themeSelector.addEventListener("change", e=>{
 /* =======================
       CSV FETCH
 =======================*/
-/* Ganti CSV_URL kalau perlu; ini URL publish CSV yang kamu pakai */
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjeiMuhEDZSi97kWRld8LvBgFeq4MiHHKmm1areOT_8uVHlkK5G2L3wFDkcGTm7YG5_aNoY2PTh2jI/pub?gid=0&single=true&output=csv";
+const SHEET_ID = "1MQPeUwTCtkZ1GDUtO920c2XivHAkZ2BMFUJroUNlMCM";
+const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq=select%20*&_=${Date.now()}`;
 
 const tbody = document.getElementById("tbody");
 const totalHutangEl = document.getElementById("totalHutang");
@@ -39,10 +39,66 @@ const totalPiutangEl = document.getElementById("totalPiutang");
 const countBelumEl = document.getElementById("countBelum");
 const countLunasEl = document.getElementById("countLunas");
 
-/* parse CSV naive (ok for your sheet). returns array of rows (arrays) */
-function parseCSV(text){
-  return text.trim().split("\n").map(r => r.split(","));
+function formatRupiah(n) {
+  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
 }
+
+fetch(GVIZ_URL, { cache: "no-store" })
+  .then(r => r.text())
+  .then(txt => {
+    const json = JSON.parse(txt.substring(47, txt.length - 2));
+    const rows = json.table.rows;
+
+    let totalHutang = 0;
+    let totalPiutang = 0;
+    let countBelum = 0;
+    let countLunas = 0;
+
+    tbody.innerHTML = ""; // reset
+
+    rows.forEach(r => {
+      const [
+        id,
+        nama,
+        type,
+        nominal,
+        tanggal,
+        keterangan,
+        sisa,
+        status
+      ] = r.c.map(c => c ? c.v : "");
+
+      // hitung
+      let nominalNum = Number(String(nominal).replace(/\./g, "").replace(",", "."));
+      let sisaNum = Number(String(sisa).replace(/\./g, "").replace(",", "."));
+
+      if (type === "Hutang") totalHutang += sisaNum;
+      if (type === "Piutang") totalPiutang += sisaNum;
+
+      if (status === "Belum Lunas") countBelum++;
+      if (status === "Lunas") countLunas++;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${id}</td>
+        <td>${nama}</td>
+        <td>${type}</td>
+        <td>${formatRupiah(nominalNum)}</td>
+        <td>${tanggal}</td>
+        <td>${keterangan}</td>
+        <td>${formatRupiah(sisaNum)}</td>
+        <td class="${status === "Lunas" ? "text-green" : "text-red"}">${status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // update UI
+    totalHutangEl.textContent = formatRupiah(totalHutang);
+    totalPiutangEl.textContent = formatRupiah(totalPiutang);
+    countBelumEl.textContent = countBelum;
+    countLunasEl.textContent = countLunas;
+  })
+  .catch(err => console.error("ERROR:", err));
 
 /* normalize numeric strings: remove thousand separators (.) and spaces, convert comma->dot if needed */
 function toNumberFromSheet(val){
