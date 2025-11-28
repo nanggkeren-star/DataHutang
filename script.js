@@ -75,7 +75,7 @@ fetch(GVIZ_URL)
         <td>${nama}</td>
         <td>${type}</td>
         <td style="text-align:right">${formatRupiah(nominalNum)}</td>
-        <td>${tanggal}</td>
+        <td>${fixDate(tanggal)}</td>
         <td>${keterangan}</td>
         <td style="text-align:right">${formatRupiah(sisaNum)}</td>
         <td><span class="pill ${status === "Lunas" ? "lunas" : "belum"}">${status}</span></td>
@@ -89,3 +89,19 @@ fetch(GVIZ_URL)
     countBelumEl.textContent = countBelum;
     countLunasEl.textContent = countLunas;
   });
+function fixDate(d) {
+  if (!d) return "-";
+
+  if (typeof d === "string" && d.startsWith("Date(")) {
+    const nums = d.match(/\d+/g).map(Number);
+    const dateObj = new Date(nums[0], nums[1], nums[2]);
+
+    return dateObj.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+  }
+
+  return d;
+}
