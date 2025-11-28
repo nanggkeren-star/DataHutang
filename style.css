@@ -93,23 +93,25 @@ thead th{
   padding:12px 14px;
   text-align:left;
   font-size:13px;
+}
+/* Tabel – semua heading center */
+thead th {
   text-align: center !important;
 }
-/* Sel tabel rata tengah kecuali kolom nominal */
+
+/* Semua kolom default tengah */
 tbody td {
   text-align: center;
+  padding: 12px 14px;
 }
 
-/* Nominal & sisa tetap kanan */
+/* Kolom nominal & sisa tetap kanan */
 td.text-right {
   text-align: right !important;
 }
 
-td:last-child {
-  text-align: center !important;
-}
-
-table th, table td {
+/* Kolom status tetap tengah */
+td.status-col {
   text-align: center !important;
 }
 
