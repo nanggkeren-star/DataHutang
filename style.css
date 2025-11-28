@@ -175,3 +175,7 @@ select#themeSelector option {
   background: #ffffff !important;
   color: #000 !important;
 }
+/* THEMES */
+.theme-retro{
+  --bg:#0b0b0e;--text:#ff1ad9;--muted:#ffea00;--accent:#ff1ad9;--logo-text:#ffffff;
+}
