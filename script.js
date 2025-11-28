@@ -110,10 +110,10 @@ fetch(GVIZ_URL, { cache: "no-store" })
         <td>${id}</td>
         <td>${nama}</td>
         <td>${type}</td>
-        <td style="text-align:right">${formatRupiah(nominalNum)}</td>
+        <td style="text-right">${formatRupiah(nominalNum)}</td>
         <td>${fixDate(tanggal)}</td>
         <td>${ket}</td>
-        <td style="text-align:right">${formatRupiah(sisaNum)}</td>
+        <td style="text-right">${formatRupiah(sisaNum)}</td>
         <td>
   <span class="pill ${status === "Lunas" ? "lunas" : "belum"}">
     ${status}

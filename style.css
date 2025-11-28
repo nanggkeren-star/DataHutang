@@ -93,35 +93,32 @@ thead th{
   padding:12px 14px;
   text-align:left;
   font-size:13px;
+  text-align: center !important;
+}
+/* Sel tabel rata tengah kecuali kolom nominal */
+tbody td {
+  text-align: center;
 }
 
-tbody td{
-  padding:12px 14px;
-  border-bottom:1px solid var(--row-border);
+/* Nominal & sisa tetap kanan */
+td.text-right {
+  text-align: right !important;
 }
 
-tbody tr:hover td{
-  background:var(--row-hover);
+td:last-child {
+  text-align: center !important;
 }
 
-/* status pill */
-.pill{
-  padding:7px 12px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:12px;
-  display:inline-block;
-  white-space:nowrap;
+.pill.lunas {
+  background: rgba(22,163,74,0.15);
+  color: var(--ok);
+  border: 1px solid rgba(22,163,74,0.3);
 }
 
-.pill.lunas{
-  background:rgba(22,163,74,0.12);
-  color:var(--ok);
-}
-
-.pill.belum{
-  background:rgba(255,77,77,0.12);
-  color:var(--bad);
+.pill.belum {
+  background: rgba(255,77,77,0.15);
+  color: var(--bad);
+  border: 1px solid rgba(255,77,77,0.3);
 }
 
 /* empty row */
