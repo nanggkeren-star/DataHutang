@@ -177,5 +177,23 @@ select#themeSelector option {
 }
 /* THEMES */
 .theme-retro{
-  --bg:#0b0b0e;--text:#ffa6f0;--muted:#ffea00;--accent:#ff1ad9;--logo-text:#ffffff;
+   --bg: #121216;
+  --text: #ff1a1a;
+  --muted: #ffea00;
+  --accent: #ff1ad9;
+
+  --panel-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+  --panel-border: rgba(255,255,255,0.04);
+  --panel-shadow: 0 8px 28px rgba(2,6,23,0.55);
+
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+  --row-bg: transparent;
+  --row-hover: rgba(255,255,255,0.02);
+  --row-border: rgba(255,255,255,0.03);
+  --table-border: rgba(255,255,255,0.04);
+
+  --header-text: #fff;
+  --ok: #15df5f;
+  --bad: #D81718;
+  --logo-text: #ffffff;
 }
