@@ -114,7 +114,11 @@ fetch(GVIZ_URL, { cache: "no-store" })
         <td>${fixDate(tanggal)}</td>
         <td>${ket}</td>
         <td style="text-align:right">${formatRupiah(sisaNum)}</td>
-        <td class="${status === "Lunas" ? "text-green" : "text-red"}">${status}</td>
+        <td>
+  <span class="pill ${status === "Lunas" ? "lunas" : "belum"}">
+    ${status}
+  </span>
+</td>
       `;
       tbody.appendChild(tr);
     });
